@@ -5,3 +5,10 @@ th, td {
   border: 1px solid black;
   text-align: center;
 }
+.select_all{
+  border: 0px;
+}
+
+.select{
+  border: 0px;
+}

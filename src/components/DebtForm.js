@@ -9,6 +9,8 @@ class DebtForm extends Component {
     Balance: ""
   }
 
+  
+
 handleSubmit = (e)=> {
   e.preventDefault()
   this.props.onNewDebtSubmit(this.state)
