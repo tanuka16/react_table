@@ -56,26 +56,26 @@ class App extends Component {
       };
       console.log(newDebt);
       // const proxyurl = { "/*": { "target": "http://localhost:3000" } }
-    const proxyurl = "http://localhost:3000/"
-    const url = "https://raw.githubusercontent.com/StrategicFS/Recruitment/master/data.json"
-    fetch( (proxyurl + url), {
-      method: 'POST',
-        headers: {
-          // 'Authorization': 'Basic'+ auth,
-          'Origin': "https://raw.githubusercontent.com/StrategicFS/Recruitment/master/data.json",
-          'Access-Control-Request-Method': "POST, GET, OPTIONS, DELETE, PUT",
-          'Access-Control-Request-Headers': 'http://localhost:3000/',
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify(newDebt)
-    })
-    .then(res => res.json())
-    .then(debtNew => {                                                  //console.log(debtNew)
-      this.setState({debt: [...this.state.debt, debtNew]})
-    .catch(() => console.log("Can’t access " + url + " response. Blocked by browser?"))
-    })
-    // this.setState({debt: [...this.state.debt, newDebt]})
+      // const proxyurl = "http://localhost:3000/"
+      // const url = "https://raw.githubusercontent.com/StrategicFS/Recruitment/master/data.json"
+      // fetch( (proxyurl + url), {
+      //   method: 'POST',
+      //     headers: {
+      //       // 'Authorization': 'Basic'+ auth,
+      //       'Origin': "https://raw.githubusercontent.com/StrategicFS/Recruitment/master/data.json",
+      //       'Access-Control-Request-Method': "POST, GET, OPTIONS, DELETE, PUT",
+      //       'Access-Control-Request-Headers': 'http://localhost:3000/',
+      //       'Content-Type': 'application/json',
+      //       'Accept': 'application/json'
+      //     },
+      //     body: JSON.stringify(newDebt)
+      // })
+      // .then(res => res.json())
+      // .then(debtNew => {                                                  //console.log(debtNew)
+      //   this.setState({debt: [...this.state.debt, debtNew]})
+      // .catch(() => console.log("Can’t access " + url + " response. Blocked by browser?"))
+      // })
+    this.setState({debt: [...this.state.debt, newDebt]})
 
   }
 
