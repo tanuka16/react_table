@@ -149,7 +149,7 @@ class DebtTable extends Component {
         <h2>Total Checkbox Checked: {this.state.count}</h2>
 
         <div onClick={this.props.handleRemove} onChange={()=>this.handleRemove()}><button>REMOVE DEBT</button></div>
-        <TotalValue total={this.state.total} balance={this.totalBalance}/>
+        <TotalValue total={this.state.total} onChange={this.totalBalance}/>
       </div>
     );
   }
