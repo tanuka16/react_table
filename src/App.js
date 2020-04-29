@@ -10,16 +10,16 @@ class App extends Component {
     debt: []
   }
 
-//dynamicly grabs data from an array of objects
+//dynamicly grabs data from an array of debts
   componentDidMount(){
     fetch("https://raw.githubusercontent.com/StrategicFS/Recruitment/master/data.json")
       .then(res => res.json())
       .then((debtData) => {
-        this.setState({ debt: debtData})
+        this.setState({ debt: debtData})                                          //change the state using setState
         // console.log(this.state)
       })
     }
-
+// Add new data
   handleNewDebtSubmit = (newDebtData) => {
   const newDebt = {
         creditorName: newDebtData.creditorName,
@@ -32,13 +32,9 @@ class App extends Component {
       // const proxyurl = { "/*": { "target": "http://localhost:3000" } }
       const proxyurl = "http://localhost:3000/"
       const url = "https://raw.githubusercontent.com/StrategicFS/Recruitment/master/data.json"
-      fetch( (proxyurl + url), {
+      fetch((proxyurl + url), {
         method: 'POST',
           headers: {
-            // 'Authorization': 'Basic'+ auth,
-            // 'Origin': "https://raw.githubusercontent.com/StrategicFS/Recruitment/master/data.json",
-            // 'Access-Control-Request-Method': "POST, GET, OPTIONS, DELETE, PUT",
-            // 'Access-Control-Request-Headers': 'http://localhost:3000/',
             'Content-Type': 'application/json',
             'Accept': 'application/json'
           },
@@ -47,15 +43,14 @@ class App extends Component {
       .then(res => res.json())
       .then(debtNew => {                                                  //console.log(debtNew)
         this.setState({debt: [...this.state.debt, debtNew]})
-      // .catch(() => console.log("Can’t access " + url + " response. Blocked by browser?"))
-      })
+        //here I'm making a copy of all the debt data and prepending to it .obj(this.state.debt)
+        })
     // this.setState({debt: [...this.state.debt, newDebt]})
 
   }
 
+// Delete data
   handleRemove=(debt)=>{
-    // console.log(debt1);
-    // console.log(this.state);
 
     let index = this.state.debt.findIndex(debtTable => debtTable.id === debt.id)
      console.log('index', index);
@@ -84,12 +79,11 @@ class App extends Component {
   render(){
     // console.log(this.state.debt)
     return (
-      <div className="container1">
+      <div>
       <h1>Debt Table</h1>
-
+        {/* render down my debts*/}
         <DebtTable debts={this.state.debt}
-            handleRemove={this.handleRemove}
-        />
+            handleRemove={this.handleRemove}/>
 
         <DebtForm onNewDebtSubmit={this.handleNewDebtSubmit}/>
 

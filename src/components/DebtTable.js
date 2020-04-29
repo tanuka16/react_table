@@ -12,6 +12,8 @@ class DebtTable extends Component {
     const parent = document.getElementById("parent");
     let input = document.getElementsByTagName('input');
     let count = this.state.count
+
+
     if(parent.checked ===  true){
       for (var i = 0; i < input.length; i++) {
         if(input[i].type ==="checkbox" && input[i].id === "child_check" && input[i].checked === false){
@@ -36,7 +38,7 @@ class DebtTable extends Component {
   }
 
 
-//Select each checkbox & counts the selected chckboxes
+//Select each checkbox & counts the selected checkboxes
   onSelectChange =(e)=>{
     // e.preventDefault()
     let count = this.state.count
@@ -95,6 +97,7 @@ class DebtTable extends Component {
         </thead>
           <tbody>
           {
+            // transfrom each ofthe object in the array using map
             this.props.debts.map((debt) => {
               return(
                   <tr key={debt.id}>
