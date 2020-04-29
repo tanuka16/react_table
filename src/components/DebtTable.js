@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import TotalValue from './TotalValue'
+
 class DebtTable extends Component {
   state={
     checked: false,
@@ -7,150 +7,137 @@ class DebtTable extends Component {
     total: 0
   }
 
-// NOT WORKING YET
-  handleCheck = ()=> {
-    let checked = !this.state.checked
-    let {count} = this.state
-    //1. check if onSelectAll is true, if yes
-    if (checked) {
-      count ++
-    }else{
-      count --
-    }
-    this.setState({count})
-    console.log(checked);
-  }
-
-// NOT WORKING YET
-  handleRemove=(debt)=>{
-    // console.log(this.props);
-    if(this.state.checked === true){
-      this.props.removeDebt()
-    }
-    // this.setState({checked})
-    // console.log(checked);
-    // if (e.target.checked){
-    //   this.props.removeDebt()
-    // }
-
-  }
-
-
-//Selects all checkboxes --- Works
+//Selects all checkboxes --- js
   onSelectAll = () => {
     const parent = document.getElementById("parent");
     let input = document.getElementsByTagName('input');
-    // console.log(this.state);
-
+    let count = this.state.count
     if(parent.checked ===  true){
       for (var i = 0; i < input.length; i++) {
         if(input[i].type ==="checkbox" && input[i].id === "child_check" && input[i].checked === false){
-          input[i].checked = true;
+          if(input[i].checked = true){
+            count++;
+          }
           // console.log(input[i]);
         }
       }
     }
     else if(parent.checked ===  false){
-      for (var i = 0; i < input.length; i++) {
-        if(input[i].type ==="checkbox" && input[i].id === "child_check" && input[i].checked===true){
-          input[i].checked = false;
+      for (var j = 0; j < input.length; j++) {
+        if(input[j].type ==="checkbox" && input[j].id === "child_check" && input[j].checked===true){
+          if(input[j].checked = false){
+            count--;
+          }
           // console.log(input[i]);
         }
       }
     }
+    this.setState(prevState=>({...prevState, count}))
   }
 
 
-//Select each checkbox === works
+//Select each checkbox & counts the selected chckboxes
   onSelectChange =(e)=>{
-    e.preventDefault()
-    this.setState({ [e.target.name]: e.target.checked })
+    // e.preventDefault()
+    let count = this.state.count
+    const { type, checked, name} = e.target;
+    this.setState({ [name]: checked })
+    // counts the selected chckboxes
+    if(type === "checkbox" && checked === true){
+      count++;
+    }else {
+      count--;
+    }
+    this.setState(prevState=>({...prevState, count}))
     console.log(e.target.checked);
   }
 
-// NOT WORKING YET
-  totalBalance = () =>{
-    const sum = document.getElementById("sum");
-    for (var i = 0; i < sum.length; i++) {
-      for (var j = 1; j < sum.length; j++) {
-        let total = sum[i] + sum[j]
-        return total
+  calculateTotal=(e)=> {
+    const {checked} = e.target;
+    let total= this.state.total;
+    // let checked = this.state.checked
+    this.props.debts.forEach((debt, id)=> {
+      if(checked){
+        (total += debt.balance)
+      }else{
+        (total -= debt.balance)
       }
-    }
-    return sum;
-    // return (this.props.debt.balance.reduce((a,b) => a + b, 0))
-    // debts.balance.forEach((a, b) =>{
-    //   return a + b
-    // })
-    // console.log(this.props.debt);
-    // debts.balance.reduce(
-    //   (debt, balance) => debt + balance
-    // )
+    })
+
+    this.setState(prevState=>({...prevState, total}))
+    console.log(total);
+    // document.getElementById("val").innerHTML = "Sum Value =" + total;
   }
 
 
-
   render(){
-    // console.log(this.totalBalance);
-
-    // const totalBalance = this.props.debt.forEach(debt => {
-    //     debt.balance.reduce(function(y, x){
-    //       return y + x
-    //     }, 0)
-    //
-    //
-    // })
-
+    // debugger
+    // console.log(this.props.debts[0]);
+    // console.log(this.props.handleRemove);
     return(
-      <div>
-        <table>
+      <div className="container">
+        <table className="center" id="table" >
         <thead>
         <tr>
           <th className="select_all">
             <input type="checkbox" name="check" id="parent"
-              onClick={this.onSelectAll.bind(this)} onChange={this.handleCheck} count={this.state.count}/>
+              onClick={this.onSelectAll.bind(this)}
+              onChange={this.calculateTotal}
+              />
+
           </th>
           <th>CreditorName</th>
           <th>FirstName</th>
           <th>LastName</th>
-          <th>MinPaymentPercentage</th>
+          <th>Min Pay%</th>
           <th>Balance</th>
         </tr>
         </thead>
           <tbody>
           {
-            this.props.debt.map((debt, i) => {
+            this.props.debts.map((debt) => {
               return(
-                  <tr key={i}>
+                  <tr key={debt.id}>
                       <td className="select">
-                        <input type="checkbox" name="check1" id="child_check"
+                        <input type="checkbox" name="check1" id="child_check" className="optional"
                           onChange={this.onSelectChange.bind(this)}
-                          check={this.state.checked.toString()}
-                          onChange={this.handleCheck}
                           />
                       </td>
                       <td>{debt.creditorName}</td>
                       <td>{debt.firstName}</td>
                       <td>{debt.lastName}</td>
                       <td>{debt.minPaymentPercentage}</td>
-                      <td id="sum">{debt.balance}</td>
+                      <td>{debt.balance}</td>
                     </tr>
                   )
                 })
               }
-
-
-          </tbody>
-          <tbody>
-
           </tbody>
         </table>
+        <span id="val"></span>
         <br />
-        <h2>Total Checkbox Checked: {this.state.count}</h2>
+        <div>
 
-        <div onClick={this.props.handleRemove} onChange={()=>this.handleRemove()}><button>REMOVE DEBT</button></div>
-        <TotalValue total={this.state.total} onChange={this.totalBalance}/>
+          <div id="myDiv">
+          <h4>Total: {this.state.total}</h4>
+
+              Check Row Count: {this.state.count}
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+              Total Row Count: {this.props.debts.length}
+
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>
+
+            <button className='dbutton' onClick={this.props.handleRemove}>REMOVE</button>
+          </div>
+          <br />
+          <hr />
+
+
+        </div>
       </div>
+
     );
   }
 }
